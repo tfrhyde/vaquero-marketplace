@@ -1,0 +1,15 @@
+src/
+├── app/
+│   ├── signup/
+│   │   └── page.tsx
+│   ├── login/
+│   │   └── page.tsx
+│   ├── post/
+│   │   └── page.tsx
+│   ├── listing/
+│   │   └── [id]/
+│   │       └── page.tsx
+│   ├── account/
+│   │   └── page.tsx
+│   └── favorites/
+│       └── page.tsx
