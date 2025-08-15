@@ -182,19 +182,9 @@ export default function AccountPage() {
           <Link href="/post">
             <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition cursor-pointer">
               <div className="text-orange-500 mb-3">
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
+                <div className="text-orange-500 mb-3">
+                  <i className="ri-add-line text-[32px]" aria-hidden="true" />
+                </div>
               </div>
               <h3 className="text-xl font-semibold mb-1">Post a Listing</h3>
               <p className="text-sm text-gray-600">
@@ -206,19 +196,7 @@ export default function AccountPage() {
           <Link href="/listing">
             <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition cursor-pointer">
               <div className="text-orange-500 mb-3">
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 3h18M9 3v18m6-18v18M3 9h18"
-                  />
-                </svg>
+                <i className="ri-grid-line text-[32px]" />
               </div>
               <h3 className="text-xl font-semibold mb-1">View Marketplace</h3>
               <p className="text-sm text-gray-600">
@@ -230,19 +208,7 @@ export default function AccountPage() {
           <Link href="/bookmarks">
             <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition cursor-pointer">
               <div className="text-orange-500 mb-3">
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 5v14l7-7 7 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2z"
-                  />
-                </svg>
+                <i className="ri-bookmark-line text-[32px]" />
               </div>
               <h3 className="text-xl font-semibold mb-1">Bookmarks</h3>
               <p className="text-sm text-gray-600">
@@ -331,6 +297,19 @@ export default function AccountPage() {
             )}
           </div>
         </section>
+
+        <Link
+          href="/userSettings"
+          className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-2
+             bg-orange-500 hover:bg-orange-600 text-white font-semibold
+             px-4 py-3 rounded-full shadow-lg focus:outline-none
+             focus:ring-2 focus:ring-orange-300"
+          aria-label="Open settings"
+          title="Settings"
+        >
+          <i className="ri-settings-3-line text-lg" aria-hidden="true" />
+          <span>Settings</span>
+        </Link>
 
         {editing && (
           <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
