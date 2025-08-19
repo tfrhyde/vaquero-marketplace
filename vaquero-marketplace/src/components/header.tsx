@@ -38,7 +38,7 @@ export default function Header() {
           <Link href="/post" className="hover:text-orange-600 transition">
             Post Listing
           </Link>
-          <Link href="/bookmarks" className="hover:text-orange-600 transition">
+          <Link href="/favorites" className="hover:text-orange-600 transition">
             Bookmarks
           </Link>
           <Link href="/account" className="hover:text-orange-600 transition">

@@ -205,7 +205,7 @@ export default function AccountPage() {
             </div>
           </Link>
 
-          <Link href="/bookmarks">
+          <Link href="/favorites">
             <div className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition cursor-pointer">
               <div className="text-orange-500 mb-3">
                 <i className="ri-bookmark-line text-[32px]" />
