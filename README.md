@@ -11,6 +11,9 @@ First, run either
 Then
 - Open http://localhost:3000 with your browser to see the result.
 
+And
+- Deploy Vercel or on other deployment platform
+
 ### 2. Contributors and Credit
 - Celeste Rios: Partially worked on the backend of the desktop version, worked on the frontend of the desktop version, testing of both versions, and a portion of the planning of the project
 - Alan Sandoval: Work developing both the backends of web and desktop version of the project, testing and deploying the project, and a portion of the planning of the project.
