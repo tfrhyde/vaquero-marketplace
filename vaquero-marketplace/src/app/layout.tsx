@@ -1,17 +1,13 @@
-// app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
+import LoaderWrapper from "@/components/Loader";
 
 export const metadata: Metadata = {
   title: "Vaquero Market",
   description: "A community-powered marketplace",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -20,7 +16,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <LoaderWrapper>{children}</LoaderWrapper>
+      </body>
     </html>
   );
 }
