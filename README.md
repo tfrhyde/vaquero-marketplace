@@ -18,6 +18,6 @@ And
 
 ### 2. Contributors and Credit
 - Celeste Rios: Partially worked on the backend of the desktop and web version, worked on the frontend of the desktop version, testing of both versions, and a portion of the planning of the project
-- Alan Sandoval: Worked on developing both the backends of web and desktop version of the project, front end structure, testing the project, and a portion of the planning of the project.
+- Alan Sandoval: Worked on developing both the backends of web and desktop version of the project, worked on the front end structure of the web version, testing the project, and a portion of the planning of the project.
 - Carlos Herrera: Initial work on the web version and setting up the database initially, worked on the frontend of web version, and a portion of the planning of the project.
-- Troy Rodriguez: Miscellaneous assistance and commits, worked on search and filter features of the app.
+- Troy Rodriguez: Miscellaneous assistance and commits, worked on search and filter features of both versions of the app.
