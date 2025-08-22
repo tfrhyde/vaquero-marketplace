@@ -8,20 +8,27 @@ import ListingFeed from '@/components/ListingFeed';
 
 export default function AllListingsPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  // Local state
+  const [loading, setLoading] = useState(true);  // tracks loading while checking auth
+  const [isAuthenticated, setIsAuthenticated] = useState(false);  // whether user is logged in
+
+
+  // Check if the user is logged in
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.user) {
+        // If not logged in → redirect to home/login
         router.push('/');
       } else {
+         // If logged in → mark authenticated and stop loading
         setIsAuthenticated(true);
         setLoading(false);
       }
     });
   }, [router]);
 
+   // Loading state while waiting for session check
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -30,8 +37,10 @@ export default function AllListingsPage() {
     );
   }
 
+  // If user is not authenticated, render nothing
   if (!isAuthenticated) return null;
 
+  // Render marketplace page when authenticated
   return (
     <>
       <Header />

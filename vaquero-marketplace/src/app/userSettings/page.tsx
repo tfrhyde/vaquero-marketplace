@@ -9,58 +9,71 @@ import Link from "next/link";
 export default function userSettingsPage() {
   const router = useRouter();
 
+  // State variables to handle loading state, authentication, and user details
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
+  // State variables for preferences
   const [emailAlerts, setEmailAlerts] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
+  // State variables for delete account functionality
   const [showDelete, setShowDelete] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
+  // Fetch user session and check if authenticated
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setIsAuthenticated(true);
         setUserEmail(session.user.email ?? null);
       } else {
+        // Redirect to home page if user is not authenticated
         router.push("/");
       }
       setLoading(false);
     });
   }, [router]);
 
+  // Function to delete the user's account
   const deleteAccount = async () => {
     try {
-      setDeleting(true);
-      setDeleteError(null);
+      setDeleting(true); // start deleting process
+      setDeleteError(null); // reset any previous error messages
+      
+      // Fetch the session and access token
       const {
         data: { session },
       } = await supabase.auth.getSession();
       const token = session?.access_token;
       if (!token) throw new Error("Not signed in.");
 
+      // Make a request to the API to delete the account
       const res = await fetch("/api/delete-account", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      // Handle any error that occurs during the API call
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error || "Failed to delete account.");
       }
 
+      // Sign out the user and redirect to the homepage
       await supabase.auth.signOut();
       router.push("/");
     } catch (e: any) {
+      // If an error occurs, update the error state
       setDeleteError(e.message ?? "Something went wrong.");
       setDeleting(false);
     }
   };
 
+  // Show loading state while waiting for user data
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -68,6 +81,8 @@ export default function userSettingsPage() {
       </div>
     );
   }
+
+  // If not authenticated, do not render anything
   if (!isAuthenticated) return null;
 
   return (

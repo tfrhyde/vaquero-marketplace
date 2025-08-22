@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import Header from "@/components/header";
 import Link from "next/link";
 
+// Type for a listing object
 type Listing = {
   id: string;
   user_id: string;
@@ -24,28 +25,30 @@ export default function ListingDetailPage() {
   const router = useRouter();
   const params = useParams<{ id: string }>();
 
+  // Local state
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [listing, setListing] = useState<Listing | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
-  const [bookmarking, setBookmarking] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false); //track state
+  const [bookmarking, setBookmarking] = useState(false); // show loading state when bookmarking
+  const [isBookmarked, setIsBookmarked] = useState(false); // track if this listing is bookmarked
 
-
+  // Fetch listing details + bookmark status on mount
   useEffect(() => {
     (async () => {
+      // get session
       const {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session?.user) {
-        router.push("/");
+        router.push("/"); // redirect if not logged in
         return;
       }
       setIsAuthenticated(true);
       setUserId(session.user.id);
 
-
+      // Fetch the listing by ID
       const { data, error } = await supabase
         .from("Listings")
         .select("*")
@@ -58,6 +61,7 @@ export default function ListingDetailPage() {
         setListing(data as Listing);
       }
 
+      // Check if this listing is already bookmarked by user
       if (session.user.id && params.id) {
         const { data: bm } = await supabase
           .from("Bookmarks")
@@ -72,7 +76,7 @@ export default function ListingDetailPage() {
     })();
   }, [params.id, router]);
 
-
+  // Add / Remove bookmark
   const handleBookmark = async () => {
     if (!userId || !listing) return;
   
@@ -108,7 +112,7 @@ export default function ListingDetailPage() {
     }
   };
 
-
+  // Loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -117,7 +121,10 @@ export default function ListingDetailPage() {
     );
   }
 
+  // If user is not authenticated, don’t show anything
   if (!isAuthenticated) return null;
+
+  // Error or listing not found
   if (error || !listing) {
     return (
       <>
@@ -137,6 +144,7 @@ export default function ListingDetailPage() {
     );
   }
 
+  // Contact seller email setup
   const isEmail = listing.display_name && listing.display_name.includes("@");
   const sellerEmail = isEmail ? listing.display_name : null;
   const subject = `Inquiry about "${listing.title}"`;

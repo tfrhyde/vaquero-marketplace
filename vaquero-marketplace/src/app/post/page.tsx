@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import Header from "@/components/header";
-import { div, p } from "framer-motion/client";
-import { warnOptionHasBeenMovedOutOfExperimental } from "next/dist/server/config";
 
 export default function NewListingPage() {
   const router = useRouter();
@@ -17,7 +15,7 @@ export default function NewListingPage() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session?.user) {
-        router.push("/");
+        router.push("/"); // Redirect to home if not logged in
       } else {
         setIsAuthenticated(true);
       }
@@ -32,10 +30,13 @@ export default function NewListingPage() {
   const [category, setCategory] = useState("");
   const [itemLocation, setItemLocation] = useState("");
   const [file, setFile] = useState<File | null>(null);
+
+  // Feedback state
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  // Show loader while checking auth
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -121,6 +122,7 @@ export default function NewListingPage() {
         .insert(listing);
       if (insertError) throw insertError;
 
+      // Succed - reset form
       setSuccess("Listing posted succesfully!");
       setTitle("");
       setDescription("");
@@ -189,7 +191,7 @@ export default function NewListingPage() {
             className="border border-gray-300 rounded px-3 py-2 w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-gray-100"
           />
 
-          {error && <p className="text-red-600-sm">{error}</p>}
+          {error && <p className="text-red-600 text-sm">{error}</p>}
           {success && <p className="text-green-600 text-sm">{success}</p>}
 
           <button

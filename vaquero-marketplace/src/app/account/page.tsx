@@ -8,28 +8,35 @@ import Link from "next/link";
 
 export default function AccountPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [userListings, setUserListings] = useState<any[]>([]);
-  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
-  const [actionError, setActionError] = useState<string | null>(null);
 
-  const [editing, setEditing] = useState<any | null>(null);
+  // State: auth + user data
+  const [loading, setLoading] = useState(true);   // loading state for initial fetch
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // track logged in user
+  const [userEmail, setUserEmail] = useState<string | null>(null); // current user email
+  const [userListings, setUserListings] = useState<any[]>([]);  // users own listings
+  
+  // State: per-listing actions
+  const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);  // ID of listing being updated
+  const [actionError, setActionError] = useState<string | null>(null);  // error messages
+
+  // State: editing modal
+  const [editing, setEditing] = useState<any | null>(null); //current listing being edited
   const [editTitle, setEditTitle] = useState("");
   const [editPrice, setEditPrice] = useState("");
   const [editCategory, setEditCategory] = useState("");
   const [editLocation, setEditLocation] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editFile, setEditFile] = useState<File | null>(null);
-  const [saving, setSaving] = useState(false);
+  const [editFile, setEditFile] = useState<File | null>(null);  //optional new image
+  const [saving, setSaving] = useState(false);  // while daving edits
 
+  // Check session and load users listings
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session?.user) {
         setIsAuthenticated(true);
         setUserEmail(session.user.email ?? null);
 
+        // Fetch user's own listings
         const { data: listings, error } = await supabase
           .from("Listings")
           .select("*")
@@ -38,12 +45,13 @@ export default function AccountPage() {
 
         if (!error) setUserListings(listings || []);
       } else {
-        router.push("/");
+        router.push("/"); // Redirect if not logged in
       }
       setLoading(false);
     });
   }, [router]);
 
+  // Toggle sold/available status for a listing
   const toggleSold = async (id: string, sold: boolean) => {
     setActionLoadingId(id);
     setActionError(null);
@@ -62,6 +70,7 @@ export default function AccountPage() {
     setActionLoadingId(null);
   };
 
+  // Delete a listing
   const deleteListing = async (id: string) => {
     const ok = window.confirm("Delete this listing? This cannot be undone.");
     if (!ok) return;
@@ -77,6 +86,7 @@ export default function AccountPage() {
     setActionLoadingId(null);
   };
 
+  // Open edit modal and preload values
   const openEdit = (l: any) => {
     setEditing(l);
     setEditTitle(l.title ?? "");
@@ -88,6 +98,7 @@ export default function AccountPage() {
     setActionError(null);
   };
 
+  // Close edit modal and reset form
   const closeEdit = () => {
     setEditing(null);
     setEditTitle("");
@@ -100,6 +111,7 @@ export default function AccountPage() {
     setActionError(null);
   };
 
+  // Save edits to supabase
   const saveEdit = async () => {
     if (!editing) return;
     setSaving(true);
@@ -108,6 +120,7 @@ export default function AccountPage() {
     try {
       let image_url: string | null = editing.image_url ?? null;
 
+      // Upload new images if provided
       if (editFile) {
         const {
           data: { session },
@@ -125,6 +138,7 @@ export default function AccountPage() {
         image_url = pub.publicUrl;
       }
 
+      // Build updated record
       const update = {
         title: editTitle.trim(),
         price: Number(editPrice),
@@ -134,6 +148,7 @@ export default function AccountPage() {
         image_url,
       };
 
+      // Save changed in DB
       const { data, error } = await supabase
         .from("Listings")
         .update(update)
@@ -143,6 +158,7 @@ export default function AccountPage() {
 
       if (error) throw error;
 
+      // Update UI state
       setUserListings((prev) =>
         prev.map((l) => (l.id === editing.id ? { ...l, ...data } : l))
       );
@@ -153,6 +169,7 @@ export default function AccountPage() {
     }
   };
 
+  // Loading screen
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -163,6 +180,7 @@ export default function AccountPage() {
 
   if (!isAuthenticated) return null;
 
+  // Render page
   return (
     <>
       <Header />

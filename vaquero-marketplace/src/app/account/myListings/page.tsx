@@ -6,6 +6,7 @@ import { supabase } from '@/lib/supabaseClient';
 import Header from '@/components/header';
 import Link from 'next/link';
 
+// Define the shape of a listing record from Supabase
 type Listing = {
   id: string;
   user_id: string;
@@ -22,14 +23,18 @@ type Listing = {
 
 export default function MyListingsPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [listings, setListings] = useState<Listing[]>([]);
-  const [error, setError] = useState<string | null>(null);
 
+  // State management
+  const [loading, setLoading] = useState(true); // while fetching listings
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // track login
+  const [listings, setListings] = useState<Listing[]>([]); // users listings
+  const [error, setError] = useState<string | null>(null); //fetch errors
+
+   // For per-listing action states
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
+  // For editing a listing
   const [editing, setEditing] = useState<Listing | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editPrice, setEditPrice] = useState('');
@@ -39,15 +44,17 @@ export default function MyListingsPage() {
   const [editFile, setEditFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // Check session & load listings
   useEffect(() => {
     (async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
-        router.push('/');
+        router.push('/'); // redirect if not logged in
         return;
       }
       setIsAuthenticated(true);
 
+      // Fetch user’s own listings from Supabase
       const { data, error } = await supabase
         .from('Listings')
         .select('*')
@@ -60,6 +67,7 @@ export default function MyListingsPage() {
     })();
   }, [router]);
 
+  // Toggle sold/available
   const toggleSold = async (id: string, sold: boolean) => {
     setActionLoadingId(id);
     setActionError(null);
@@ -74,6 +82,7 @@ export default function MyListingsPage() {
     setActionLoadingId(null);
   };
 
+  // Delete listing
   const deleteListing = async (id: string) => {
     const ok = window.confirm('Delete this listing? This cannot be undone.');
     if (!ok) return;
@@ -89,6 +98,7 @@ export default function MyListingsPage() {
     setActionLoadingId(null);
   };
 
+  // Open edit modal & preload values
   const openEdit = (l: Listing) => {
     setEditing(l);
     setEditTitle(l.title ?? '');
@@ -100,6 +110,7 @@ export default function MyListingsPage() {
     setActionError(null);
   };
 
+  // Close edit modal & reset state
   const closeEdit = () => {
     setEditing(null);
     setEditTitle('');
@@ -112,6 +123,7 @@ export default function MyListingsPage() {
     setActionError(null);
   };
 
+  // Save edits to Supabase (including optional new image upload)
   const saveEdit = async () => {
     if (!editing) return;
     setSaving(true);
@@ -120,6 +132,7 @@ export default function MyListingsPage() {
     try {
       let image_url: string | null = editing.image_url ?? null;
 
+      // Handle new image upload
       if (editFile) {
         const { data: { session } } = await supabase.auth.getSession();
         const uid = session?.user?.id;
@@ -131,6 +144,7 @@ export default function MyListingsPage() {
         image_url = pub.publicUrl;
       }
 
+      // Update record in DB
       const update = {
         title: editTitle.trim(),
         price: Number(editPrice),
@@ -139,7 +153,7 @@ export default function MyListingsPage() {
         description: editDescription.trim(),
         image_url,
       };
-
+ 
       const { data, error } = await supabase
         .from('Listings')
         .update(update)
@@ -148,6 +162,7 @@ export default function MyListingsPage() {
         .single();
       if (error) throw error;
 
+      // Update local state
       setListings(prev => prev.map(l => (l.id === editing.id ? { ...l, ...data } as Listing : l)));
       closeEdit();
     } catch (e: any) {
@@ -156,6 +171,7 @@ export default function MyListingsPage() {
     }
   };
 
+  // Loading screen
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -165,6 +181,7 @@ export default function MyListingsPage() {
   }
   if (!isAuthenticated) return null;
 
+  // Render UI
   return (
     <>
       <Header />

@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 import Header from "@/components/header";
 import Link from "next/link";
 
+// Type for a listing object
 type Listing = {
   id: string;
   title: string;
@@ -20,23 +21,26 @@ type Listing = {
 
 export default function FavoritesPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [bookmarks, setBookmarks] = useState<Listing[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  // Local state
+  const [loading, setLoading] = useState(true); // page loading
+  const [bookmarks, setBookmarks] = useState<Listing[]>([]);  // users bookmarked listings
+  const [error, setError] = useState<string | null>(null);  // error messages
 
+
+  // Check session and fetch bookmarks
   useEffect(() => {
     (async () => {
-      // ✅ Get logged-in user
+      // Get logged-in user
       const {
         data: { session },
       } = await supabase.auth.getSession();
 
       if (!session?.user) {
-        router.push("/");
+        router.push("/"); //redirect to home if not logged in
         return;
       }
 
-      // ✅ Query Bookmarks joined with Listings
+      // Query Bookmarks joined with Listings
       const { data, error } = await supabase
         .from("Bookmarks")
         .select("Listings(*)") // pull full listing details
@@ -45,7 +49,7 @@ export default function FavoritesPage() {
       if (error) {
         setError(error.message);
       } else {
-        // Flatten out Listings objects
+        // Flatten out Listings objects into array
         const listings = (data || [])
           .map((row: any) => row.Listings)
           .filter(Boolean);
@@ -56,6 +60,7 @@ export default function FavoritesPage() {
     })();
   }, [router]);
 
+  // Laoding status
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -64,6 +69,7 @@ export default function FavoritesPage() {
     );
   }
 
+  // Render bookamrks page
   return (
     <>
       <Header />
