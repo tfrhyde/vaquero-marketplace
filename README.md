@@ -8,6 +8,8 @@ First, run either
 - pnpm dev
 - bun dev
 
+If none of those are installed, install required and repeat the last step.
+
 Then
 - Open http://localhost:3000 with your browser to see the result.
 
