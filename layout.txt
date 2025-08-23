@@ -1,0 +1,77 @@
+vaquero-marketplace/
+│
+├── README.md
+├── Vaquero Marketplace Web App Technical Document.pdf
+├── layout.txt
+│
+├── .idea/ (JetBrains project settings)
+│ ├── inspectionProfiles/
+│ │ ├── Project_Default.xml
+│ │ └── profiles_settings.xml
+│ ├── misc.xml
+│ ├── modules.xml
+│ ├── vaquero-marketplace.iml
+│ └── vcs.xml
+│
+└── vaquero-marketplace/ (Next.js app)
+├── .gitignore
+├── eslint.config.mjs
+├── next.config.ts
+├── package.json
+├── package-lock.json
+├── postcss.config.js
+├── postcss.config.mjs
+├── tailwind.config.js
+├── tsconfig.json
+│
+├── public/ (Static assets)
+│ ├── UTRGV Logo.png
+│ ├── Vaquero Desktop App Landing Page Image.jpg
+│ ├── Vaquero Head.png
+│ ├── file.svg
+│ ├── globe.svg
+│ ├── next.svg
+│ ├── vercel.svg
+│ └── window.svg
+│
+└── src/
+├── app/ (App Router pages & routes)
+│ ├── layout.tsx (App shell/layout)
+│ ├── globals.css (Global styles for app/)
+│ ├── favicon.ico
+│ ├── page.tsx (Home page)
+│ │
+│ ├── account/
+│ │ ├── page.tsx (Account dashboard)
+│ │ └── myListings/
+│ │ └── page.tsx (User’s listings)
+│ │
+│ ├── api/
+│ │ └── delete-account/
+│ │ └── route.ts (API: delete account)
+│ │
+│ ├── favorites/
+│ │ └── page.tsx (Favorites page)
+│ │
+│ ├── listing/
+│ │ ├── page.tsx (Listings index)
+│ │ └── [id]/
+│ │ └── page.tsx (Listing details)
+│ │
+│ ├── post/
+│ │ └── page.tsx (Create listing)
+│ │
+│ └── userSettings/
+│ └── page.tsx (Profile/settings)
+│
+├── components/ (Reusable UI)
+│ ├── header.tsx (Site header)
+│ ├── ListingFeed.tsx (Listings feed)
+│ ├── Loader.tsx (Spinner)
+│ ├── LoginForm.tsx (Auth form)
+│ └── SignupForm.tsx (Auth form)
+│
+├── lib/
+│ └── supabaseClient.ts (Supabase client)
+│
+└── global.css (Additional global styles)
